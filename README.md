@@ -1,6 +1,6 @@
 # Skylanders Trap Team Bluetooth Controller Driver for PC
 
-Bring your old **Skylanders Trap Team** (iOS/Android/Tablet version) controller back to life! This driver allows you to use the wireless Bluetooth controller as a native **Xbox 360 Gamepad** on Windows 10 and 11.
+This driver allows you to use the wireless Bluetooth controller as a **Xbox 360 Gamepad** on pc.
 
 
 

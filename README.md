@@ -20,11 +20,11 @@ This driver allows you to use the wireless Bluetooth controller as a **Xbox 360 
 
 ## Technical Details (Data Mapping)
 The controller sends 20-byte Bluetooth LE packets. This driver decodes it as follows:
-* **Byte 0:** Header, it's always set as 0x53 wich in the ASCII table wich translates as the S from Skylanders.
+* **Byte 0:** Header, it's always set as 0x53 wich in the ASCII table which translates as the S from Skylanders.
 * **Byte 1:** It's used as a "packet counter" each packet sent increases the value to verify packet losses or duplicates.
 * **Byte 2:** Used as pairing mode status.
-* **Byte 3:** Battery level
-* **Byte 4-7:** I think it's used as "Padding" or Firmware Updates
+* **Byte 3:** Battery level.
+* **Byte 4-7:** I think it's used as "Padding" or Firmware Updates.
 * **Byte 8:** D-Pad (bits 0x01-0x08) and ABXY (bits 0x10-0x80).
 * **Byte 9:** L1 (0x10), R1 (0x20), Home/Guide (0x04).
 * **Byte 10** Left Trigger.
@@ -33,8 +33,8 @@ The controller sends 20-byte Bluetooth LE packets. This driver decodes it as fol
 * **Byte 13** Right Stick Y axis.
 * **Byte 14** Left Stick X axis.
 * **Byte 15** Left Stick Y axis.
-* **Byte 16** another counter 
-* **Byte 17-19** as another padding set always to 0
+* **Byte 16** another counter .
+* **Byte 17-19** as another padding set always to 0.
 
 ## License
 This project is licensed under the **MIT License**. See the `LICENSE` file for details.

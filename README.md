@@ -12,6 +12,7 @@ This driver allows you to use the wireless Bluetooth controller as a **Xbox 360 
 ## Requirements
 1. **Windows 10/11** with Bluetooth support.
 2. **[ViGEmBus Driver](https://github.com/ViGEm/ViGEmBus/releases)** (Must be installed for the emulation to work).
+3. (only on the py version) you need python 3.10+ and the blake library (`pip install blake`)
 
 ## How to Install
 1. **Download:** Go to the [Releases](https://github.com/ALYX5715/Skylanders-Trap-Team-Bluetooth-Controller-Driver/releases/tag/1.0.0) section and download  `controller.exe`.

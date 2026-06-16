@@ -1,33 +1,59 @@
 # Skylanders Trap Team Bluetooth Controller Driver for PC
-
 This driver allows you to use the wireless Bluetooth controller as a **Xbox 360 Gamepad** on pc.
-
-
 
 ## Features
 * **Full Mapping:** Supports Analog Sticks, D-Pad, ABXY buttons, Bumpers (L1/R1), and Triggers (L2/R2).
 * **Xbox 360 Emulation:** Powered by ViGEmBus, making it compatible with Steam, Epic Games, and most emulators.
 
-
 ## Requirements
 1. **Windows 10/11** with Bluetooth support.
-2. **[ViGEmBus Driver](https://github.com/ViGEm/ViGEmBus/releases)** (Must be installed for the emulation to work).
-3. (only on the py version) you need python 3.10+ and the blake library (`pip install blake`)
+2. **[ViGEmBus Driver](https://github.com/ViGEm/ViGEmBus/releases)** (Must be manually installed if running from Releases for emulation to work).
 
-## How to Install
+## Installation
+### From Releases
 1. **Download:** Go to the [Releases](https://github.com/ALYX5715/Skylanders-Trap-Team-Bluetooth-Controller-Driver/releases/tag/1.0.0) section and download  `controller.exe`.
 2. **Run:** Launch the application and then turn on the GamePad. You will hear the Windows "device connected" sound.
 3. **Test:** Visit [Gamepad Tester](https://gamepad-tester.com/) to verify all inputs.
 
+### Manual
+#### Clone the repository
+**Option 1: Download ZIP:** In GitHub, click the green "Code" button above the README and file tree, set the tab to "Local", and click "Download ZIP". Extract the downloaded ZIP into a memorable folder.
+
+**Option 2: `git clone`:** Ensure [Git](https://git-scm.com/install/windows) is installed. Open a terminal and navigate to a memorable directory, then run `git clone https://github.com/ALYX5715/Skylanders-Trap-Team-Bluetooth-Controller-Driver`.
+
+#### Dependencies
+Ensure the latest version of Python 3 is installed (>=3.10). If it is not, download from [python.org](https://python.org).
+
+Install [`uv`](https://docs.astral.sh/uv/) for package management.
+
+1. Open a command line, navigate to the previously cloned directory using `cd`, and run `uv sync` to create a virtual environment and install dependencies.
+2. Activate the virtual environment
+   1. If using `cmd.exe`, run `.venv/Scripts/activate.bat`
+   2. If using PowerShell, run `.venv/Scripts/activate.ps1`
+
+#### Running
+Run the `main.py` script by running `py main.py`
+
+<details>
+
+<summary>Troubleshooting</summary>
+
+If the `py` command is not found, try replacing it with one of the following:
+- `py3`
+- `python`
+- `python3`
+
+</details>
+
 ## Technical Details (Data Mapping)
 The controller sends 20-byte Bluetooth LE packets. This driver decodes it as follows:
-* **Byte 0:** Header, it's always set as 0x53 wich in the ASCII table translates as the S from Skylanders.
+* **Byte 0:** Header, it's always set as `0x53`, which in the ASCII table translates as the S from Skylanders.
 * **Byte 1:** It's used as a "packet counter" each packet sent increases the value to verify packet losses or duplicates.
 * **Byte 2:** Used as pairing mode status.
 * **Byte 3:** Battery level.
 * **Byte 4-7:** I think it's used as "Padding" or Firmware Updates.
-* **Byte 8:** D-Pad (bits 0x01-0x08) and ABXY (bits 0x10-0x80).
-* **Byte 9:** L1 (0x10), R1 (0x20), Home/Guide (0x04).
+* **Byte 8:** D-Pad (bits `0x01`-`0x08`) and ABXY (bits `0x10`-`0x80`).
+* **Byte 9:** L1 (`0x10`), R1 (`0x20`), Home/Guide (`0x04`).
 * **Byte 10** Left Trigger.
 * **Byte 11** Right Trigger.
 * **Byte 12** Right Stick X axis.
@@ -38,7 +64,7 @@ The controller sends 20-byte Bluetooth LE packets. This driver decodes it as fol
 * **Byte 17-19** as another padding set always to 0.
 
 ## License
-This project is licensed under the **MIT License**. See the `LICENSE` file for details.
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
 ## Credits
 Developed by [ALYX5715](https://github.com/ALYX5715).

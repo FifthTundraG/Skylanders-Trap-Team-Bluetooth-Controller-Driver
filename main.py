@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: MIT
+#
+# Copyright (c) 2026 ALYX5715 and contributors
+
 import asyncio
 import vgamepad as vg
 from bleak import BleakClient, BleakScanner
@@ -5,27 +9,26 @@ from bleak import BleakClient, BleakScanner
 CHARACTERISTIC_UUID = "533e1541-3abe-f33f-cd00-594e8b0a8ea3"
 NAME_CONTROLLER = "Skylanders GamePad"
 
-def scale_axis(value):
+def scale_axis(value: int) -> int:
     if value > 127: val = value - 256
     else: val = value
     val = max(-127, min(127, val))
     if abs(val) < 12: return 0
     return int(val * 257)
 
-def notification_handler(sender, data, gamepad):
+def notification_handler(_sender, data: bytearray, gamepad: vg.VX360Gamepad) -> None:
     b = list(data)
     if len(b) < 16: return
 
     # DPAD (Byte 8)
-    dpad = b[8] & 0x0F
-    gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_UP)
-    gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_DOWN)
-    gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_LEFT)
-    gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_RIGHT)
-    if dpad == 0x01: gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_UP)
-    elif dpad == 0x02: gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_DOWN)
-    elif dpad == 0x04: gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_LEFT)
-    elif dpad == 0x08: gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_RIGHT)
+    if b[8] & 0x01: gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_UP)
+    else: gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_UP)
+    if b[8] & 0x02: gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_DOWN)
+    else: gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_DOWN)
+    if b[8] & 0x04: gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_LEFT)
+    else: gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_LEFT)
+    if b[8] & 0x08: gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_RIGHT)
+    else: gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_RIGHT)
 
     # ABXY (Byte 8)
     if b[8] & 0x10: gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_A)
@@ -37,7 +40,7 @@ def notification_handler(sender, data, gamepad):
     if b[8] & 0x80: gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_Y)
     else: gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_Y)
 
-    # DORSI & HOME (Byte 9)
+    # SHOULDERS & HOME (Byte 9)
     if b[9] & 0x10: gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
     else: gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER)
     if b[9] & 0x20: gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER)
@@ -56,19 +59,19 @@ def notification_handler(sender, data, gamepad):
     gamepad.update()
 
 async def run_driver():
-    print(f"Driver avviato. Ricerca di: {NAME_CONTROLLER}...")
+    print(f"Driver started. Searching for: {NAME_CONTROLLER}...")
     while True:
         try:
             device = await BleakScanner.find_device_by_name(NAME_CONTROLLER)
             if device:
                 print("Controller Found! Activating ViGEmBus...")
-                virtual_pad = vg.VX360Gamepad() 
+                virtual_pad = vg.VX360Gamepad()
                 
                 async with BleakClient(device) as client:
                     print(f"Connected to {NAME_CONTROLLER}. Have fun")
                     await client.start_notify(
-                        CHARACTERISTIC_UUID, 
-                        lambda s, d: notification_handler(s, d, virtual_pad)
+                        CHARACTERISTIC_UUID,
+                        lambda sender, data: notification_handler(sender, data, virtual_pad)
                     )
                     
                     while client.is_connected:

@@ -1,0 +1,10 @@
+[project]
+name = "Skylanders-Trap-Team-Bluetooth-Controller-Driver"
+version = "1.0.0"
+description = "Driver for windows based on python to use the tablet version of Trap Team on windows like a Xbox 360 controller on Windows 10/11 "
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "bleak>=3.0.2",
+    "vgamepad>=0.1.0",
+]

@@ -1,0 +1,40 @@
+name: Build Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+env:
+    VGAMEPAD_SKIP_VIGEMBUS_INSTALL: "true" # uv sync will hang if this is not set because vgamepad will try to install ViGEmBus using a graphical installer
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+
+        # See https://github.com/yannbouteiller/vgamepad/issues/43 for why this is necessary
+      - name: Upgrade vgamepad to latest commit
+        run: uv add "vgamepad @ git+https://github.com/yannbouteiller/vgamepad.git@main"
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Install PyInstaller
+        run: uv add --dev pyinstaller
+
+      - name: Build executable
+        run: uv run pyinstaller --onefile --name Skylanders-Gamepad-Driver main.py
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/Skylanders-Gamepad-Driver.exe

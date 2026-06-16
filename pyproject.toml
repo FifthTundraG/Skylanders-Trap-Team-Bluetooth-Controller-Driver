@@ -8,3 +8,8 @@ dependencies = [
     "bleak>=3.0.2",
     "vgamepad>=0.1.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.21.0",
+]
